@@ -1,9 +1,8 @@
-name: MLFlow CI Training
+name: Train Model
 
 on:
   push:
-    branches: 
-      - main
+    branches: ["main"]
   workflow_dispatch:
 
 jobs:
@@ -14,21 +13,28 @@ jobs:
     - name: Checkout Repository
       uses: actions/checkout@v4
 
-    - name: Install Conda
-      uses: conda-incubator/setup-miniconda@v2
+    - name: Install Miniconda
+      uses: conda-incubator/setup-miniconda@v3
       with:
-        activate-environment: mlflow-env
-        environment-file: MLProject/conda.yaml
+        auto-update-conda: true
         python-version: "3.10"
+        activate-environment: mlflow-env
+
+    - name: Create Conda Environment
+      run: |
+        conda env create -f MLProject/conda.yaml
+        conda activate mlflow-env
 
     - name: Install MLflow
-      run: pip install mlflow
+      run: |
+        pip install mlflow
 
-    - name: Run MLflow Project
-      run: mlflow run MLProject -e main
+    - name: Run Training
+      run: |
+        mlflow run MLProject
 
-    - name: Upload Artifacts (metrics & reports)
-      uses: actions/upload-artifact@v3
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v4
       with:
-        name: trained-model-artifacts
+        name: model-artifacts
         path: mlruns
