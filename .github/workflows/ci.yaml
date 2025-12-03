@@ -1,40 +1,50 @@
-name: Train Model
+name: train
 
 on:
   push:
-    branches: ["main"]
+    branches: [ main ]
   workflow_dispatch:
 
 jobs:
   train:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout Repository
-      uses: actions/checkout@v4
+      - name: Checkout repo
+        uses: actions/checkout@v4
 
-    - name: Install Miniconda
-      uses: conda-incubator/setup-miniconda@v3
-      with:
-        auto-update-conda: true
-        python-version: "3.10"
-        activate-environment: mlflow-env
+      - name: Set up Miniconda
+        uses: conda-incubator/setup-miniconda@v3
+        with:
+          auto-update-conda: true
+          miniforge: false
+          python-version: "3.10"   # sesuaikan jika perlu
 
-    - name: Create Conda Environment
-      run: |
-        conda env create -f MLProject/conda.yaml
-        conda activate mlflow-env
+      - name: Create conda env from file
+        shell: bash -l {0}
+        run: |
+          conda env remove -n mlflow-env -y || true
+          conda env create -f MLProject/conda.yaml -n mlflow-env
+          conda activate mlflow-env
+          python -V
 
-    - name: Install MLflow
-      run: |
-        pip install mlflow
+      - name: Install mlflow (pip)
+        shell: bash -l {0}
+        run: |
+          conda activate mlflow-env
+          pip install mlflow
 
-    - name: Run Training
-      run: |
-        mlflow run MLProject
+      - name: Run training (tuning reports only)
+        shell: bash -l {0}
+        run: |
+          conda activate mlflow-env
+          # sesuaikan nama script yang mau dijalankan:
+          python MLProject/tuning_reports_only.py
 
-    - name: Upload Artifacts
-      uses: actions/upload-artifact@v4
-      with:
-        name: model-artifacts
-        path: mlruns
+      - name: Upload reports artefacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: reports
+          path: |
+            MLProject/estimator.html
+            MLProject/metric_info.json
+            MLProject/training_confusion_matrix.png
