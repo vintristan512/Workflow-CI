@@ -1,0 +1,34 @@
+name: MLFlow CI Training
+
+on:
+  push:
+    branches: 
+      - main
+  workflow_dispatch:
+
+jobs:
+  train:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v3
+
+    - name: Install Conda
+      uses: conda-incubator/setup-miniconda@v2
+      with:
+        activate-environment: mlflow-env
+        environment-file: MLProject/conda.yaml
+        python-version: "3.10"
+
+    - name: Install MLflow
+      run: pip install mlflow
+
+    - name: Run MLflow Project
+      run: mlflow run MLProject -e main
+
+    - name: Upload Artifacts (metrics & reports)
+      uses: actions/upload-artifact@v3
+      with:
+        name: trained-model-artifacts
+        path: mlruns
