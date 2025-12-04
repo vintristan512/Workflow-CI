@@ -1,12 +1,11 @@
-env_manager: local
-python_env:
-  python: "3.12"
-  dependencies:
-    - mlflow
-    - scikit-learn
-    - pandas
-    - numpy
-    - joblib
-    - google-api-python-client
-    - google-auth-oauthlib
-    - google-auth-httplib2
+name: workflow-ci-env
+channels:
+  - defaults
+dependencies:
+  - python=3.12
+  - pip
+  - pip:
+      - mlflow
+      - pandas
+      - numpy
+      - scikit-learn
