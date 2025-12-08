@@ -61,7 +61,7 @@ def run_basic_model():
         mlflow.sklearn.log_model(model, "model_artefact")
 
         # --- 🔥 FIX: SIMPAN ARTEFAK DI PATH YANG PASTI TERDETEKSI OLEH CI ---
-        artifact_dir = os.path.join(PROJECT_ROOT, "MLProject", "artifact")
+        artifact_dir = os.path.join(os.getcwd(), "artifact")
         os.makedirs(artifact_dir, exist_ok=True)
     
         model_path = os.path.join(artifact_dir, "model.joblib")
@@ -80,4 +80,5 @@ if __name__ == '__main__':
 
     DATA_PATH = args.data_path
     run_basic_model()
+
 
