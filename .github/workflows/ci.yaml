@@ -11,7 +11,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4   # versi terbaru
+        uses: actions/checkout@v4
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -24,10 +24,10 @@ jobs:
 
       - name: Run MLflow Project
         run: |
-          mlflow run MLProject --no-conda
+          mlflow run MLProject     # FIXED, no more --no-conda !!!
 
       - name: Upload Artifacts (model)
-        uses: actions/upload-artifact@v4   # FIX!
+        uses: actions/upload-artifact@v4
         with:
           name: trained-model
           path: MLProject/artifact
