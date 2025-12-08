@@ -7,6 +7,8 @@ from sklearn.linear_model import LogisticRegression
 import mlflow
 import mlflow.sklearn
 import logging
+import argparse
+
 
 logging.basicConfig(level=logging.WARN)
 
@@ -68,4 +70,9 @@ def run_basic_model():
         print(f"Run berhasil dilog ke: {mlflow.get_tracking_uri()}") 
         
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--data_path", type=str, default="diabetes_preprocessing.csv")
+    args = parser.parse_args()
+
+    DATA_PATH = args.data_path
     run_basic_model()
