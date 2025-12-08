@@ -22,11 +22,11 @@ jobs:
         run: |
           pip install mlflow scikit-learn pandas numpy joblib
 
-      - name: Run MLflow Project
+      - name: Run training script (bypass MLflow Projects)
         run: |
-          mlflow run MLProject     --env-manager=local
-          
-      - name: Upload Artifacts (model)
+          python MLProject/modelling.py
+
+      - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
           name: trained-model
