@@ -11,10 +11,10 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4   # versi terbaru
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: "3.10"
 
@@ -27,7 +27,7 @@ jobs:
           mlflow run MLProject --no-conda
 
       - name: Upload Artifacts (model)
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4   # FIX!
         with:
           name: trained-model
           path: MLProject/artifact
