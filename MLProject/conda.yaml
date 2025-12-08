@@ -1,11 +1,12 @@
-name: workflow-ci-env
+name: diabetes-ci-env
 channels:
   - defaults
 dependencies:
   - python=3.10
   - pip
   - pip:
-      - mlflow
-      - scikit-learn
-      - pandas
-      - numpy
+    - mlflow
+    - scikit-learn
+    - pandas
+    - numpy
+    - joblib
