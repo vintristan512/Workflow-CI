@@ -22,19 +22,19 @@ jobs:
         run: |
           pip install mlflow scikit-learn pandas numpy joblib
 
-      - name: Run training script (bypass MLflow Projects)
+      - name: Run training script
+        working-directory: MLProject
         run: |
-          python MLProject/modelling.py
+          python modelling.py
 
-      - name: List MLProject folder (debug)
+      - name: Debug — List MLProject
+        working-directory: MLProject
         run: |
-          echo "PWD: $(pwd)"
-          ls -la MLProject || true
-          ls -la MLProject/artifact || true
+          ls -la .
+          ls -la artifact || true
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
           name: trained-model
           path: MLProject/artifact
-
