@@ -1,6 +1,8 @@
-name: Train Model
+name: MLflow CI
 
 on:
+  push:
+    branches: [ main ]
   workflow_dispatch:
 
 jobs:
@@ -8,37 +10,25 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repo
+      - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Set up Python 3.12.7
+      - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: "3.12.7"
+          python-version: "3.10"
 
-      - name: Check Env
+      - name: Install dependencies
         run: |
-          python --version
-          pip --version
+          pip install mlflow scikit-learn pandas numpy joblib
 
-      - name: Install MLflow
+      - name: Run MLflow Project
         run: |
-          pip install --upgrade pip
-          pip install mlflow
+          mlflow run MLProject --no-conda
 
-      - name: Set MLflow Tracking URI
-        run: |
-          export MLFLOW_TRACKING_URI="file:./mlruns"
-          echo "MLFLOW_TRACKING_URI=$MLFLOW_TRACKING_URI"
-
-      - name: Run mlflow project
-        run: |
-          mlflow run MLProject --env-manager local
-
-      - name: Install Python dependencies (post-run)
-        run: |
-          pip install google-api-python-client google-auth-oauthlib google-auth-httplib2
-
-      - name: Upload model to Google Drive
-        run: |
-          python upload_to_gdrive.py
+      - name: Upload Artifacts (model)
+        uses: actions/upload-artifact@v3
+        with:
+          name: trained-model
+          path: MLProject/artifact
+          if-no-files-found: warn
