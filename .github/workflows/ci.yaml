@@ -24,8 +24,8 @@ jobs:
 
       - name: Run MLflow Project
         run: |
-          mlflow run MLProject     # FIXED, no more --no-conda !!!
-
+          mlflow run MLProject     --env-manager=local
+          
       - name: Upload Artifacts (model)
         uses: actions/upload-artifact@v4
         with:
