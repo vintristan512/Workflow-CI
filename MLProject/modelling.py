@@ -60,17 +60,23 @@ def run_basic_model():
         # Logging model secara eksplisit
         mlflow.sklearn.log_model(model, "model_artefact")
 
-        # --- 🔥 FIX: SIMPAN ARTEFAK DI PATH YANG PASTI TERDETEKSI OLEH CI ---
-        artifact_dir = os.path.join(os.getcwd(), "artifact")
+        # --- 🔥 FIX FINAL: Simpan artefak DI SAMPING file modelling.py (MLProject/artifact) ---
+        # Gunakan __file__ agar path benar walau script dijalankan dari root
+        artifact_dir = os.path.join(os.path.dirname(__file__), "artifact")
         os.makedirs(artifact_dir, exist_ok=True)
-    
+
         model_path = os.path.join(artifact_dir, "model.joblib")
         joblib.dump(model, model_path)
-    
+
+        # Log ke MLflow juga (optional)
         mlflow.log_artifact(model_path)
+
+        # Debug prints supaya terlihat di log CI
+        print(f"DEBUG: current working dir = {os.getcwd()}")
+        print(f"DEBUG: artifact_dir = {artifact_dir}")
+        print(f"DEBUG: files in MLProject = {os.listdir(os.path.dirname(__file__))}")
         print(f"Model artefak tersimpan di: {model_path}")
-    
-        print(f"Run berhasil dilog ke: {mlflow.get_tracking_uri()}")
+
 
 
 if __name__ == '__main__':
@@ -80,5 +86,6 @@ if __name__ == '__main__':
 
     DATA_PATH = args.data_path
     run_basic_model()
+
 
 
