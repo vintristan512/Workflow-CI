@@ -1,0 +1,44 @@
+name: Train Model
+
+on:
+  workflow_dispatch:
+
+jobs:
+  train:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Set up Python 3.12.7
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.12.7"
+
+      - name: Check Env
+        run: |
+          python --version
+          pip --version
+
+      - name: Install MLflow
+        run: |
+          pip install --upgrade pip
+          pip install mlflow
+
+      - name: Set MLflow Tracking URI
+        run: |
+          export MLFLOW_TRACKING_URI="file:./mlruns"
+          echo "MLFLOW_TRACKING_URI=$MLFLOW_TRACKING_URI"
+
+      - name: Run mlflow project
+        run: |
+          mlflow run MLProject --env-manager local
+
+      - name: Install Python dependencies (post-run)
+        run: |
+          pip install google-api-python-client google-auth-oauthlib google-auth-httplib2
+
+      - name: Upload model to Google Drive
+        run: |
+          python upload_to_gdrive.py
