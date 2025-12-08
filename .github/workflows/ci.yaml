@@ -26,6 +26,12 @@ jobs:
         run: |
           python MLProject/modelling.py
 
+      - name: List MLProject folder (debug)
+        run: |
+          echo "PWD: $(pwd)"
+          ls -la MLProject || true
+          ls -la MLProject/artifact || true
+
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
