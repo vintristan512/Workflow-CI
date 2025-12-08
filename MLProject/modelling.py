@@ -52,23 +52,26 @@ def run_basic_model():
 
     with mlflow.start_run(run_name="Basic_Logistic_Regression"):
         
-        model.fit(X_train, y_train)
-        test_score = model.score(X_test, y_test)
-
+        model.fit(X_train, y_train) 
+        test_score = model.score(X_test, y_test) 
+        
         print(f"Pelatihan Selesai. Akurasi Test: {test_score:.4f}")
+        
+        # Logging model secara eksplisit
+        mlflow.sklearn.log_model(model, "model_artefact")
 
-        # --- 🔥 BAGIAN PENTING: SIMPAN ARTEFAK UNTUK CI ---
-        artifact_dir = os.path.join(os.path.dirname(__file__), "artifact")
+        # --- 🔥 FIX: SIMPAN ARTEFAK DI PATH YANG PASTI TERDETEKSI OLEH CI ---
+        artifact_dir = os.path.join(PROJECT_ROOT, "MLProject", "artifact")
         os.makedirs(artifact_dir, exist_ok=True)
-
+    
         model_path = os.path.join(artifact_dir, "model.joblib")
-        joblib.dump(model, model_path)   # SIMPAN MODEL MANUAL
-
-        # Log juga via MLflow (optional)
+        joblib.dump(model, model_path)
+    
         mlflow.log_artifact(model_path)
-
         print(f"Model artefak tersimpan di: {model_path}")
+    
         print(f"Run berhasil dilog ke: {mlflow.get_tracking_uri()}")
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -77,3 +80,4 @@ if __name__ == '__main__':
 
     DATA_PATH = args.data_path
     run_basic_model()
+
