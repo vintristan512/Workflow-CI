@@ -30,5 +30,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: trained-model
-          path: MLProject/artifact
-          if-no-files-found: warn
+          path: MLProject/artifact/
+          if-no-files-found: error
+
