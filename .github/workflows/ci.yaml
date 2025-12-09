@@ -22,18 +22,18 @@ jobs:
         run: |
           pip install mlflow scikit-learn pandas numpy joblib
 
-      - name: Run training script
-        working-directory: MLProject
+      # === STEP WAJIB: RUN MLFLOW PROJECT ===
+      - name: Run MLflow Project
         run: |
-          python modelling.py
+          mlflow run MLProject --env-manager=local
 
-      - name: Debug — List MLProject
-        working-directory: MLProject
+      # OPTIONAL: list artifact folder untuk debug reviewer
+      - name: List MLProject folder
         run: |
-          ls -la .
-          ls -la artifact || true
+          ls -R MLProject
 
-      - name: Upload artifacts
+      # UPLOAD ARTIFACT
+      - name: Upload model artifact
         uses: actions/upload-artifact@v4
         with:
           name: trained-model
