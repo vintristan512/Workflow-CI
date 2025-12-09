@@ -50,7 +50,7 @@ def run_basic_model():
 
     print("Memulai pelatihan model dasar dengan Autolog...")
 
-    with mlflow.start_run(run_name="Basic_Logistic_Regression"):
+    with mlflow.start_run(run_name="Basic_Logistic_Regression", nested=True):
         
         model.fit(X_train, y_train) 
         test_score = model.score(X_test, y_test) 
@@ -86,6 +86,7 @@ if __name__ == '__main__':
 
     DATA_PATH = args.data_path
     run_basic_model()
+
 
 
 
