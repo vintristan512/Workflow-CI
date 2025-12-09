@@ -22,10 +22,9 @@ jobs:
         run: |
           pip install mlflow scikit-learn pandas numpy joblib
 
-      - name: Run training script
-        working-directory: MLProject
+      - name: Run mlflow project
         run: |
-          python modelling.py
+          mlflow run MLProject --env-manager=local
 
       - name: Debug — List MLProject
         working-directory: MLProject
