@@ -22,18 +22,27 @@ jobs:
         run: |
           pip install mlflow scikit-learn pandas numpy joblib
 
+      # KRITIS: Mengatur working-directory ke ROOT REPO untuk Path yang benar.
       - name: Run mlflow project
+        working-directory: ./ # Set working directory ke root repository
         run: |
-          mlflow run MLproject --env-manager=local
-
+          # Perintah ini akan menjalankan Project yang berada di folder MLProject
+          # Menggunakan --env-manager=local untuk menghindari error Conda/Git.
+          mlflow run MLProject --env-manager=local
+          
+      # DEBUG STEP: Memastikan folder artifact dibuat di dalam MLProject
       - name: Debug — List MLProject
+        # Setting working-directory ke MLProject untuk melihat isinya
         working-directory: MLProject
         run: |
           ls -la .
           ls -la artifact || true
 
+      # KRITIS: Upload Artifacts
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
           name: trained-model
-          path: MLProject/artifact
+          # Path artifact harus relatif dari ROOT repository (karena working-directory di-set di langkah run)
+          path: MLProject/mlruns/
+          # NOTE: Logika MLflow menyimpan artifacts di folder mlruns/ (bukan artifact/)
