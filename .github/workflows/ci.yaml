@@ -29,3 +29,8 @@ jobs:
       run: |
         mlflow run . --env-manager=local -P data_path=diabetes_preprocessing.csv
 
+    - name: Upload model artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: trained-model
+        path: ./mlruns
