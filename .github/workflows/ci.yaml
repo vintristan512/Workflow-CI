@@ -1,5 +1,3 @@
-# ci.yaml - KODE FINAL FIXED UNTUK KRITERIA 3
-
 name: MLflow CI
 
 on:
@@ -12,12 +10,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # LANGKAH CLEANUP KRITIS: Menghapus data MLflow lama yang mungkin korup (penyebab Run ID Not Found)
-      - name: Clean up previous MLflow runs
-        run: |
-          rm -rf MLProject/mlruns/
-          rm -f MLProject/sqlite.db
-          
       - name: Checkout repository
         uses: actions/checkout@v4
 
@@ -30,25 +22,19 @@ jobs:
         run: |
           pip install mlflow scikit-learn pandas numpy joblib
 
-      # LANGKAH INI AKAN BERHASIL: Menjalankan Project MLflow
-      - name: Run mlflow project
-        working-directory: ./ 
+      - name: Run training script
+        working-directory: MLProject
         run: |
-          # Kita menjalankan dari ROOT, dan menggunakan --env-manager=local untuk fix Conda/Git error.
-          mlflow run MLProject --env-manager=local
+          python modelling.py
 
-      # DEBUG STEP: Memastikan folder artifact dibuat
       - name: Debug — List MLProject
         working-directory: MLProject
         run: |
           ls -la .
-          ls -la mlruns/ || true # List folder mlruns
-          ls -la artifact || true # List folder artifact
+          ls -la artifact || true
 
-      # Upload Artifacts
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
           name: trained-model
-          # Mengunggah seluruh folder tracking MLflow (mlruns/)
-          path: MLProject/mlruns/
+          path: MLProject/artifact
