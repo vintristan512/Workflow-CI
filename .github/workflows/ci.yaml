@@ -1,3 +1,5 @@
+# ci.yaml - KODE FINAL FIXED UNTUK KRITERIA 3
+
 name: MLflow CI
 
 on:
@@ -10,6 +12,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # LANGKAH CLEANUP KRITIS: Menghapus data MLflow lama yang mungkin korup (penyebab Run ID Not Found)
+      - name: Clean up previous MLflow runs
+        run: |
+          rm -rf MLProject/mlruns/
+          rm -f MLProject/sqlite.db
+          
       - name: Checkout repository
         uses: actions/checkout@v4
 
@@ -22,27 +30,25 @@ jobs:
         run: |
           pip install mlflow scikit-learn pandas numpy joblib
 
-      # KRITIS: Mengatur working-directory ke ROOT REPO untuk Path yang benar.
+      # LANGKAH INI AKAN BERHASIL: Menjalankan Project MLflow
       - name: Run mlflow project
-        working-directory: ./ # Set working directory ke root repository
+        working-directory: ./ 
         run: |
-          # Perintah ini akan menjalankan Project yang berada di folder MLProject
-          # Menggunakan --env-manager=local untuk menghindari error Conda/Git.
+          # Kita menjalankan dari ROOT, dan menggunakan --env-manager=local untuk fix Conda/Git error.
           mlflow run MLProject --env-manager=local
-          
-      # DEBUG STEP: Memastikan folder artifact dibuat di dalam MLProject
+
+      # DEBUG STEP: Memastikan folder artifact dibuat
       - name: Debug — List MLProject
-        # Setting working-directory ke MLProject untuk melihat isinya
         working-directory: MLProject
         run: |
           ls -la .
-          ls -la artifact || true
+          ls -la mlruns/ || true # List folder mlruns
+          ls -la artifact || true # List folder artifact
 
-      # KRITIS: Upload Artifacts
+      # Upload Artifacts
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
           name: trained-model
-          # Path artifact harus relatif dari ROOT repository (karena working-directory di-set di langkah run)
+          # Mengunggah seluruh folder tracking MLflow (mlruns/)
           path: MLProject/mlruns/
-          # NOTE: Logika MLflow menyimpan artifacts di folder mlruns/ (bukan artifact/)
