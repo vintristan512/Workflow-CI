@@ -27,4 +27,5 @@ jobs:
     - name: Run MLflow Project (CI-stable)
       working-directory: MLProject
       run: |
-        mlflow run . --env-manager=local --no-conda -P data_path=diabetes_preprocessing.csv
+        mlflow run . --env-manager=local -P data_path=diabetes_preprocessing.csv
+
