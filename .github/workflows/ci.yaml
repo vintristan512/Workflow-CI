@@ -10,28 +10,18 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+    - name: Checkout repository
+      uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.10"
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.10"
 
-      - name: Install dependencies
-        run: |
-          pip install mlflow scikit-learn pandas numpy joblib
+    - name: Install dependencies
+      run: |
+        pip install mlflow scikit-learn pandas numpy
 
-      - name: Prepare mlruns folder
-        run: mkdir -p mlruns
-
-      # === WAJIB: hanya step ini yang menjalankan training ===
-      - name: Run MLflow Project
-        run: |
-          mlflow run MLProject --env-manager=local
-
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: trained-model
-          path: MLProject/artifact
+    - name: Run MLflow Project
+      run: |
+        mlflow run MLProject --env-manager=local
