@@ -11,8 +11,7 @@ import joblib
 logging.basicConfig(level=logging.WARN)
 
 # === PATH CONFIG ===
-PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-MLFLOW_TRACKING_URI = "file:" + os.path.join(PROJECT_ROOT, "mlruns")
+MLFLOW_TRACKING_URI = "file:mlruns"
 
 EXPERIMENT_NAME = "Klasifikasi Diabetes - Basic Run"
 RANDOM_SEED = 42
@@ -70,3 +69,4 @@ if __name__ == "__main__":
 
     DATA_PATH = args.data_path
     run_basic_model()
+
