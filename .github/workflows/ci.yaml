@@ -22,17 +22,14 @@ jobs:
         run: |
           pip install mlflow scikit-learn pandas numpy joblib
 
-      # === STEP WAJIB: RUN MLFLOW PROJECT ===
+      # FIX: make sure mlruns exists so MLflow doesn't panic
+      - name: Prepare mlruns folder
+        run: mkdir -p mlruns
+
       - name: Run MLflow Project
         run: |
           mlflow run MLProject --env-manager=local
 
-      # OPTIONAL: list artifact folder untuk debug reviewer
-      - name: List MLProject folder
-        run: |
-          ls -R MLProject
-
-      # UPLOAD ARTIFACT
       - name: Upload model artifact
         uses: actions/upload-artifact@v4
         with:
